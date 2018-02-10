@@ -7,13 +7,23 @@
 		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.js'></script>
 		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.0/mapbox-gl.css' rel='stylesheet' />
 		<style>
-			body { margin:0; padding:0; }
-			#map { position:absolute; top:0; bottom:0; width:100%; }
-		</style>
-	</head>
-	<body>
-
-		<style>
+			body { 
+				margin:0; 
+				padding:0; 
+			}
+			
+			#map {
+				position:absolute; 
+				top:0; 
+				bottom:0; 
+				width:100%; 
+			}
+			
+			.mapboxgl-popup {
+				max-width: 400px;
+				font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+			}
+			
 			#menu {
 				position: absolute;
 				background: #fff;
@@ -21,6 +31,8 @@
 				font-family: 'Open Sans', sans-serif;
 			}
 		</style>
+	</head>
+	<body>
 
 		<div id='map'></div>
 
@@ -60,6 +72,54 @@
 				inputs[i].onclick = switchLayer;
 			}
 			
+			//adding icons to the map
+			map.loadImage('icons/dnd.png', function(error, image) {
+				if (error) 
+					throw error;
+				map.addImage('Do Not Contact', image);
+			
+			});
+			map.loadImage('icons/gmail.png', function(error, image) {
+				if (error) 
+					throw error;
+				map.addImage('Email', image);
+			});
+			map.loadImage('icons/missing.png', function(error, image) {
+				if (error) 
+					throw error;
+				map.addImage('Missing', image);
+			
+			});
+			map.loadImage('icons/more.png', function(error, image) {
+				if (error) 
+					throw error;
+				map.addImage('Other', image);
+			
+			});
+			map.loadImage('icons/phone.png', function(error, image) {
+				if (error) 
+					throw error;
+				map.addImage('Phone Call', image);
+			
+			});
+			map.loadImage('icons/police.png', function(error, image) {
+				if (error) 
+					throw error;
+				map.addImage('Police Report', image);
+			
+			});
+			map.loadImage('icons/walk.png', function(error, image) {
+				if (error) 
+					throw error;
+				map.addImage('Walk In', image);
+			
+			});
+			map.loadImage('icons/web.png', function(error, image) {
+				if (error) 
+					throw error;
+				map.addImage('Web Form', image);
+			
+			});
 			
 			map.on('load', function () {
 			
@@ -73,7 +133,7 @@
 					"type": "symbol",
 					"source": "graffiti",
 					"layout": {
-						"icon-image": "{icon}-15",
+						"icon-image": "{source}",
 						"text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
 						"text-offset": [0, 0.6],
 						"text-anchor": "top"
@@ -81,10 +141,24 @@
 				});
 			});
 
-			
-			
-			
+			var popup = new mapboxgl.Popup({
+				closeButton: false,
+				closeOnClick: false
+			});
 
+			map.on('mouseenter', 'points', function(e) {
+				map.getCanvas().style.cursor = 'pointer';
+
+			popup.setLngLat(e.features[0].geometry.coordinates)
+				.setHTML(e.features[0].properties.description + ", <br/><b>Requested Date: " + e.features[0].properties.requested_datetime + "<br/>Closed Date: " + e.features[0].properties.closed_date + "</b>")
+				.addTo(map);
+			});
+
+			map.on('mouseleave', 'points', function() {
+				map.getCanvas().style.cursor = '';
+				popup.remove();
+			});
+			
 		</script>
 
 	</body>
