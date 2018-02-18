@@ -24,34 +24,98 @@
 				font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
 			}
 			
-			#menu {
+			#legend-group {
 				position: absolute;
 				background: #fff;
 				padding: 10px;
 				font-family: 'Open Sans', sans-serif;
 			}
+
+			.legend-group input[type=checkbox]:first-child + label {
+				border-radius: 3px 3px 0 0;
+			}
+
+			.legend-group label:last-child {
+				border-radius: 0 0 3px 3px;
+				border: none;
+			}
+
+			.legend-group input[type=checkbox] {
+				display: none;
+			}
+
+			.legend-group input[type=checkbox] + label {
+				background-color: #3386c0;
+				cursor: pointer;
+				padding: 10px;
+				border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+			}
+
+			.legend-group input[type=checkbox] + label {
+				background-color: #3386c0;
+				text-transform: capitalize;
+			}
+
+			.legend-group input[type=checkbox] + label:hover,
+			.legend-group input[type=checkbox]:checked + label {
+				background-color: #4ea0da;
+			}
+
+			.legend-group input[type=checkbox]:checked + label:before {
+				content: '✔';
+				margin-right: 5px;
+			}
+			
 		</style>
 	</head>
 	<body>
-
+		
 		<div id='map'></div>
-
-		<div id='menu'>
-			<input id='basic' type='radio' name='rtoggle' value='basic' checked='checked'>
-			<label for='basic'>Basic</label>
-			<input id='streets' type='radio' name='rtoggle' value='streets'>
-			<label for='streets'>Streets</label>
-			<input id='bright' type='radio' name='rtoggle' value='bright'>
-			<label for='bright'>Bright</label>
-			<input id='light' type='radio' name='rtoggle' value='light'>
-			<label for='light'>Light</label>
-			<input id='dark' type='radio' name='rtoggle' value='dark'>
-			<label for='dark'>Dark</label>
-			<input id='satellite' type='radio' name='rtoggle' value='satellite'>
-			<label for='satellite'>Satellite</label>
+		
+		<div id='legend-group'>
+		
+			<input id='dnd' type='checkbox' name='ltoggle' value='dnd' checked = 'checked'>
+			<label for='dnd'>Do Not Contact</label>
+			<br/>
+			<input id='gmail' type='checkbox' name='ltoggle' value='gmail' checked = 'checked'>
+			<label for='gmail'>Email</label>
+			<br/>
+			<input id='missing' type='checkbox' name='ltoggle' value='missing' checked = 'checked'>
+			<label for='missing'>Missing</label>
+			<br/>
+			<input id='more' type='checkbox' name='ltoggle' value='more' checked = 'checked'>
+			<label for='more'>Other</label>
+			<br/>
+			<input id='phone' type='checkbox' name='ltoggle' value='phone' checked = 'checked'>
+			<label for='phone'>Phone Call</label>
+			<br/>
+			<input id='police' type='checkbox' name='ltoggle' value='police' checked = 'checked'>
+			<label for='police'>Police Report</label>
+			<br/>
+			<input id='walk' type='checkbox' name='ltoggle' value='walk' checked = 'checked'>
+			<label for='walk'>Walk In</label>
+			<br/>
+			<input id='web' type='checkbox' name='ltoggle' value='web' checked = 'checked'>
+			<label for='web'>Web Form</label>
 		</div>
-
+		
 		<script>
+		
+			/*
+				For reference:
+				Do Not Contact 	- dnd
+				Email 			- gmail
+				Missing 		- missing
+				Other 			- more
+				Phone Call 		- phone
+				Police Report 	- police
+				Walk In 		- walk
+				Web Form 		- web
+			*/
+				
+			var legendGroup = document.getElementById('legend-group');
+			
+			// creating a mapbox element
 			mapboxgl.accessToken = 'pk.eyJ1Ijoic3Vua3lhbmtpdCIsImEiOiJjamRocGRvMzcwYnltMzNwcnlrMmNhYTZ4In0.Zp4s5HMwGtJTBAckYhTPkg';
 			var map = new mapboxgl.Map({
 				container: 'map',
@@ -59,20 +123,8 @@
 				zoom: 13,
 				center: [-86.5358347, 39.1646231]
 			});
-
-			var layerList = document.getElementById('menu');
-			var inputs = layerList.getElementsByTagName('input');
-
-			function switchLayer(layer) {
-				var layerId = layer.target.id;
-				map.setStyle('mapbox://styles/mapbox/' + layerId + '-v9');
-			}
-
-			for (var i = 0; i < inputs.length; i++) {
-				inputs[i].onclick = switchLayer;
-			}
 			
-			//adding icons to the map
+			// adding icons to mapbox
 			map.loadImage('icons/dnd.png', function(error, image) {
 				if (error) 
 					throw error;
@@ -120,45 +172,67 @@
 				map.addImage('Web Form', image);
 			
 			});
-			
+
 			map.on('load', function () {
 			
 				map.addSource("graffiti", {
 					type: "geojson",
 					data: "data/graffiti_data.geojson"
 				});
+				
+				var legendList = document.getElementById('legend-group');
+				var legends = legendList.getElementsByTagName('input');
+				var legend_labels = legendList.getElementsByTagName('label');
+						
+				for (var i = 0; i < legends.length; i++) {
+					var legend = legends[i];
+					var label = legend_labels[i];
+					var layerID = 'graffiti_' + legend.id;
+					var layerImage = label.textContent;
+					
+					
+					map.addLayer({
+						"id": layerID,
+						"type": "symbol",
+						"source": "graffiti",
+						"layout": {
+							"icon-image": "{source}",
+							"text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+							"text-offset": [0, 0.6],
+							"text-anchor": "top"
+						},
+						"filter": ["==", "source", layerImage]
+					});
+					
+					var popup = new mapboxgl.Popup({
+						closeButton: false,
+						closeOnClick: false
+					});
+					
+					map.on('mouseenter', layerID, function(e) {
+						map.getCanvas().style.cursor = 'pointer';
 
-				map.addLayer({
-					"id": "points",
-					"type": "symbol",
-					"source": "graffiti",
-					"layout": {
-						"icon-image": "{source}",
-						"text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
-						"text-offset": [0, 0.6],
-						"text-anchor": "top"
-					}
-				});
+						popup.setLngLat(e.features[0].geometry.coordinates)
+							.setHTML(e.features[0].properties.description + ", <br/><b>Requested Date: " + e.features[0].properties.requested_datetime + "<br/>Closed Date: " + e.features[0].properties.closed_date + "</b>")
+							.addTo(map);
+					});
+
+					map.on('mouseleave', layerID, function() {
+						map.getCanvas().style.cursor = '';
+						popup.remove();
+					});
+
+					// Update the labels on the map when checkbox is selected or de-selected.
+					legend.addEventListener('change', function(e) {
+						var tempLayer = 'graffiti_'+e.target.id;
+						map.setLayoutProperty(tempLayer, 'visibility',
+							e.target.checked ? 'visible' : 'none');
+					});
+							
+				}
+					
 			});
-
-			var popup = new mapboxgl.Popup({
-				closeButton: false,
-				closeOnClick: false
-			});
-
-			map.on('mouseenter', 'points', function(e) {
-				map.getCanvas().style.cursor = 'pointer';
-
-			popup.setLngLat(e.features[0].geometry.coordinates)
-				.setHTML(e.features[0].properties.description + ", <br/><b>Requested Date: " + e.features[0].properties.requested_datetime + "<br/>Closed Date: " + e.features[0].properties.closed_date + "</b>")
-				.addTo(map);
-			});
-
-			map.on('mouseleave', 'points', function() {
-				map.getCanvas().style.cursor = '';
-				popup.remove();
-			});
-			
+					
 		</script>
 
 	</body>
