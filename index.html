@@ -24,46 +24,36 @@
 				font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
 			}
 			
-			#legend-group {
+			.legend-group {
+				font: 11px/16px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+				font-weight: 600;
 				position: absolute;
-				background: #fff;
-				padding: 10px;
-				font-family: 'Open Sans', sans-serif;
+				top: 20px;
+				left: 20px;
+				z-index: 1;
+				border-radius: 2px;
+				width: 120px;
+				color: #fff;
 			}
-
-			.legend-group input[type=checkbox]:first-child + label {
-				border-radius: 3px 3px 0 0;
-			}
-
-			.legend-group label:last-child {
-				border-radius: 0 0 3px 3px;
-				border: none;
-			}
-
+			
 			.legend-group input[type=checkbox] {
 				display: none;
 			}
 
-			.legend-group input[type=checkbox] + label {
-				background-color: #3386c0;
+			.legend-group label {
+				border-radius: 3px 3px 3px 3px;
+				background-color: #4ea0da;
 				cursor: pointer;
-				padding: 10px;
+				padding: 9px;
 				border-bottom: 1px solid rgba(0, 0, 0, 0.25);
 			}
-
-			.legend-group input[type=checkbox] + label {
+			
+			.legend-group input[type=checkbox]:hover {
 				background-color: #3386c0;
-				text-transform: capitalize;
 			}
-
-			.legend-group input[type=checkbox] + label:hover,
+			
 			.legend-group input[type=checkbox]:checked + label {
-				background-color: #4ea0da;
-			}
-
-			.legend-group input[type=checkbox]:checked + label:before {
-				content: '✔';
-				margin-right: 5px;
+				background-color: #3386c0;
 			}
 			
 		</style>
@@ -72,32 +62,32 @@
 		
 		<div id='map'></div>
 		
-		<div id='legend-group'>
+		<nav id='legend-group' class='legend-group'>
 		
 			<input id='dnd' type='checkbox' name='ltoggle' value='dnd' checked = 'checked'>
 			<label for='dnd'>Do Not Contact</label>
-			<br/>
+			<br/><br/>
 			<input id='gmail' type='checkbox' name='ltoggle' value='gmail' checked = 'checked'>
 			<label for='gmail'>Email</label>
-			<br/>
+			<br/><br/>
 			<input id='missing' type='checkbox' name='ltoggle' value='missing' checked = 'checked'>
 			<label for='missing'>Missing</label>
-			<br/>
+			<br/><br/>
 			<input id='more' type='checkbox' name='ltoggle' value='more' checked = 'checked'>
 			<label for='more'>Other</label>
-			<br/>
+			<br/><br/>
 			<input id='phone' type='checkbox' name='ltoggle' value='phone' checked = 'checked'>
 			<label for='phone'>Phone Call</label>
-			<br/>
+			<br/><br/>
 			<input id='police' type='checkbox' name='ltoggle' value='police' checked = 'checked'>
 			<label for='police'>Police Report</label>
-			<br/>
+			<br/><br/>
 			<input id='walk' type='checkbox' name='ltoggle' value='walk' checked = 'checked'>
 			<label for='walk'>Walk In</label>
-			<br/>
+			<br/><br/>
 			<input id='web' type='checkbox' name='ltoggle' value='web' checked = 'checked'>
 			<label for='web'>Web Form</label>
-		</div>
+		</nav>
 		
 		<script>
 		
