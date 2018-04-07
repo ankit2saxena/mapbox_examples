@@ -6,27 +6,32 @@
         <style>
             #left_column {
                 float: left;
+                position: fixed;
                 width: 40%;
             }
             #right_column {
                 float: right;
                 width: 60%;
+                background-image: url("images/background1.png");
             }
             #map_frame {
                 float: none;
                 width: 98%;
-                height: 900px;
-                padding: 5px 0px 5px 5px;
+                height: 1080px;
+                padding: 0px 0px 5px 0px;
             }
-            .video_frame {
-                text-align: right;
-                width: 85%;
-                height: 450px;
-                
+            #video_div {
+                text-align: center;
             }
-            .image_frame {
-                text-align: right;
-                width: 85%;
+            #video_frame {
+                width: 80%;
+                height: 480px;
+            }
+            #image_div {
+                text-align: center;
+            }
+            #image_frame {
+                width: 80%;
             }
             #article_text {
                 padding: 0px 10px 0px 10px;
@@ -41,9 +46,22 @@
                 text-align: justify;
             }
         </style>
+
+        <script>
+            function set_params() {
+                map_frame = document.getElementById("map_frame");
+                //map_frame.height = (window.screen.availHeight * 0.9);
+                map_frame.setAttribute('style', 'height: ' + (window.screen.availHeight * 0.9)+ 'px !important');
+
+                video_frame = document.getElementById("video_frame");
+                //video_frame.height = (window.screen.availHeight * 0.5);
+                video_frame.setAttribute('style', 'height: ' + (window.screen.availHeight * 0.5)+ 'px !important');
+
+            }
+        </script> 
     </head>
 
-    <body>
+    <body onload="set_params()">
         <div id = "left_column">
             <iframe id = "map_frame" src="map.html" class="left_column"></iframe>
         </div>
@@ -70,8 +88,8 @@
                 <p>Like any other art form, graffiti artists need loads and loads of practice right from an young age to master the artwork. But, unlike other forms of art, the passion for the art grows from witnessing the work of graph writers in alleys and street corners around the city. Additionally, there needs to be an inherent interest in the art as it cannot be forced upon an individual and there are hardly any centers that teach the art. </p> 
 
                 </br></br>
-                <div class = "video_frame">
-                    <iframe class = "video_frame" src = "https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
+                <div id = "video_div">
+                    <iframe id = "video_frame" src = "https://www.youtube.com/embed/tgbNymZ7vqY"></iframe>
                 </div>
                 </br></br>
                 
@@ -128,8 +146,10 @@
 
                 </br></br>
 
-                <img class = "image_frame" src = "images/word cloud sample.png" />
-                
+                <div id = "image_div">
+                    <img id = "image_frame" src = "images/word cloud sample.png" />
+                </div>
+
                 </br></br>
 
                 <p>Vandalism translates into “willful or malicious destruction or defacement of public or private property”3 and hence is seen by many as synonyms with the actions of graffiti artists. </p> 
